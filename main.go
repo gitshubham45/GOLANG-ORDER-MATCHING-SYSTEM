@@ -1,17 +1,20 @@
 package main
 
-import (  
-	"fmt" 
+import (
 	"github.com/gin-gonic/gin"
+
+	"golangOrderMatchingSystem/db"
 )
 
-func main(){
-	fmt.Println("URL Shortner")
+func main() {
+
+	db.InitDB()
+
 	r := gin.Default()
 
-	r.GET("/" , func(c *gin.Context){
-		c.JSON(200 , gin.H{
-			"message" : "ok",
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "ok",
 		})
 	})
 
