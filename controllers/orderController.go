@@ -6,6 +6,7 @@ import (
 	"golangOrderMatchingSystem/db"
 	"golangOrderMatchingSystem/models"
 	"golangOrderMatchingSystem/services"
+	"golangOrderMatchingSystem/utils"
 	"math/rand"
 	"net/http"
 	"os"
@@ -40,8 +41,16 @@ func PlaceOrder(c *gin.Context) {
 		return
 	}
 
-	if req.Quantity <= 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid quantity"})
+	err := utils.ValidatePlaceOrderReq(
+		req.Symbol,
+		req.Side,
+		req.Type,
+		req.Price,
+		req.Quantity,
+	)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -56,7 +65,7 @@ func PlaceOrder(c *gin.Context) {
 		Price:             req.Price,
 		InitialQuantity:   req.Quantity,
 		RemainingQuantity: req.Quantity,
-		Status:            "pending",
+		Status:            "open",
 	}
 
 	services.MatchIncomingOrder(newOrder)
@@ -135,5 +144,48 @@ func GetOrderBook(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"bids": bids,
 		"asks": asks,
+	})
+}
+
+func CancelOrder(c *gin.Context) {
+	orderID := c.Param("orderId")
+	if orderID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Missing order ID in URL",
+		})
+		return
+	}
+
+	order, err := db.GetOrderById(orderID)
+	if err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": "Order not found",
+			})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Database error",
+			})
+		}
+		return
+	}
+
+	if order.Status != "open" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Only open orders can be canceled",
+		})
+		return
+	}
+
+	if err := db.UpdateOrderStatus(orderID, "canceled"); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to cancel order",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message":  "Order canceled successfully",
+		"order_id": orderID,
 	})
 }

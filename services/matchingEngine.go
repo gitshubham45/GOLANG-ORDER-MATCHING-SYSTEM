@@ -17,28 +17,28 @@ func MatchIncomingOrder(newOrder models.Order) {
 		oppositeSide = "sell"
 		bestPriceCmp = func(a, b float64) bool { return a <= b }
 		matchPrice = func(o models.Order) float64 { return o.Price }
-	case "sell" :
+	case "sell":
 		oppositeSide = "buy"
-		bestPriceCmp = func(a , b  float64) bool { return a >= b}
+		bestPriceCmp = func(a, b float64) bool { return a >= b }
 		matchPrice = func(o models.Order) float64 { return o.Price }
 	default:
 		return
 	}
 
-	existingOrders := db.GetOpenOrders(newOrder.Symbol , oppositeSide)
+	existingOrders := db.GetOpenOrders(newOrder.Symbol, oppositeSide)
 
-	for i := 0 ; i < len(existingOrders) ; i++ {
+	for i := 0; i < len(existingOrders); i++ {
 		existing := existingOrders[i]
 
 		if newOrder.RemainingQuantity <= 0 {
 			break
 		}
 
-		if !bestPriceCmp(matchPrice(existing), newOrder.Price){
+		if !bestPriceCmp(matchPrice(existing), newOrder.Price) {
 			continue
 		}
 
-		matchedQty := math.Min(newOrder.RemainingQuantity , existing.RemainingQuantity)
+		matchedQty := math.Min(newOrder.RemainingQuantity, existing.RemainingQuantity)
 		buyID, sellID := chooseBuySellIDs(newOrder, existing)
 
 		db.LogTrade(
@@ -54,10 +54,10 @@ func MatchIncomingOrder(newOrder models.Order) {
 
 		if existing.RemainingQuantity <= 0 {
 			existing.Status = "filled"
-		}else {
+		} else {
 			existing.Status = "open"
 		}
-		db.UpdateOrder(existing)	
+		db.UpdateOrder(existing)
 	}
 
 	if newOrder.RemainingQuantity > 0 {
@@ -66,14 +66,14 @@ func MatchIncomingOrder(newOrder models.Order) {
 		} else {
 			newOrder.Status = "filled"
 		}
-	}else{
+	} else {
 		newOrder.Status = "filled"
 	}
 }
 
-func chooseBuySellIDs(newOrder , existing models.Order) (string , string ) {
+func chooseBuySellIDs(newOrder, existing models.Order) (string, string) {
 	if newOrder.Side == "buy" {
-		return newOrder.ID , existing.ID
+		return newOrder.ID, existing.ID
 	}
-	return existing.ID , newOrder.ID
+	return existing.ID, newOrder.ID
 }

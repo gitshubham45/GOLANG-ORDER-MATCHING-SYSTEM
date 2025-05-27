@@ -46,7 +46,7 @@ func InitDB() {
 
 func GetOrderById(id string) (*models.Order, error) {
 	row := DB.QueryRow(`
-        SELECT id, symbol, side, type, price, initial_quantity, remaining_quantity, status
+        SELECT id, symbol, side, type, price, initialQuantity, remainingQuantity, status
         FROM orders
         WHERE id = ?
     `, id)
@@ -72,7 +72,7 @@ func GetOrderById(id string) (*models.Order, error) {
 
 func GetOrderBookEntries(symbol string, side string) ([]map[string]interface{}, error) {
 	rows, err := DB.Query(`
-        SELECT price, SUM(remaining_quantity) as total_quantity
+        SELECT id  , type , price, initialQuantity , remainingQuantity , SUM(remainingQuantity) as totalQuantity
         FROM orders
         WHERE symbol = ? AND side = ? AND status = 'open'
         GROUP BY price
