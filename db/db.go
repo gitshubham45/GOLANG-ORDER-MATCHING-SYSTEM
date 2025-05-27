@@ -41,7 +41,6 @@ func InitDB() {
 
 	log.Println("Connected to the database")
 
-	InitializeDatabase()
 }
 
 func GetOrderById(id string) (*models.Order, error) {
@@ -72,11 +71,14 @@ func GetOrderById(id string) (*models.Order, error) {
 
 func GetOrderBookEntries(symbol string, side string) ([]map[string]interface{}, error) {
 	rows, err := DB.Query(`
-        SELECT id  , type , price, initialQuantity , remainingQuantity , SUM(remainingQuantity) as totalQuantity
-        FROM orders
-        WHERE symbol = ? AND side = ? AND status = 'open'
-        GROUP BY price
-        ORDER BY price DESC`, symbol, side)
+		SELECT 
+    		price, 
+    		SUM(remainingQuantity) AS totalQuantity
+		FROM orders
+		WHERE symbol = ? AND side = ? AND status = 'open' AND type = 'limit'
+		GROUP BY price
+		ORDER BY price DESC`,
+		symbol, side)
 
 	if err != nil {
 		return nil, err

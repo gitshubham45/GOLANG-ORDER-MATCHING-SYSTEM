@@ -27,6 +27,18 @@ func GetPort() string {
 	return getenvDefault("PORT", "8080")
 }
 
+func GetOrders(c *gin.Context) {
+	orders, err := db.GetAllOrders()
+
+	if err != nil {
+		fmt.Printf("error fetching all orders : %s", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"orders": orders})
+}
+
 func PlaceOrder(c *gin.Context) {
 	var req struct {
 		Symbol   string  `json:"symbol"`
@@ -68,7 +80,7 @@ func PlaceOrder(c *gin.Context) {
 		Status:            "open",
 	}
 
-	services.MatchIncomingOrder(newOrder)
+	newOrder = services.MatchIncomingOrder(newOrder)
 
 	db.SaveOrder(newOrder)
 

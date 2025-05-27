@@ -7,7 +7,7 @@ import (
 	"golangOrderMatchingSystem/models"
 )
 
-func MatchIncomingOrder(newOrder models.Order) {
+func MatchIncomingOrder(newOrder models.Order) models.Order {
 	var oppositeSide string
 	var bestPriceCmp func(float64, float64) bool
 	var matchPrice func(models.Order) float64
@@ -22,7 +22,7 @@ func MatchIncomingOrder(newOrder models.Order) {
 		bestPriceCmp = func(a, b float64) bool { return a >= b }
 		matchPrice = func(o models.Order) float64 { return o.Price }
 	default:
-		return
+		return newOrder
 	}
 
 	existingOrders := db.GetOpenOrders(newOrder.Symbol, oppositeSide)
@@ -69,6 +69,8 @@ func MatchIncomingOrder(newOrder models.Order) {
 	} else {
 		newOrder.Status = "filled"
 	}
+
+	return newOrder
 }
 
 func chooseBuySellIDs(newOrder, existing models.Order) (string, string) {

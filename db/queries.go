@@ -72,6 +72,33 @@ func GetOpenOrders(symbol string, side string) []models.Order {
 	return orders
 }
 
+func GetAllOrders() ([]models.Order, error) {
+	rows, err := DB.Query(`
+		SELECT * FROM orders
+	`)
+
+	if err != nil {
+		log.Println("Error fetching orders:", err)
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var orders []models.Order
+	for rows.Next() {
+		var o models.Order
+		if err := rows.Scan(
+			&o.ID, &o.Symbol, &o.Side, &o.Type, &o.Price,
+			&o.InitialQuantity, &o.RemainingQuantity, &o.Status, &o.CreatedAt, &o.UpdatedAt,
+		); err != nil {
+			log.Println("Scan error:", err)
+			continue
+		}
+		orders = append(orders, o)
+	}
+	return orders, nil
+}
+
 func LogTrade(buyID, sellID string, symbol string, price, quantity float64) {
 	query := `
 		INSERT INTO trades (buyOrderId, sellOrderId , symbol , price , quantity)
