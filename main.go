@@ -3,7 +3,9 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 
+	"golangOrderMatchingSystem/controllers"
 	"golangOrderMatchingSystem/db"
+	"golangOrderMatchingSystem/routes"
 )
 
 func main() {
@@ -18,5 +20,9 @@ func main() {
 		})
 	})
 
-	r.Run(":3000")
+	routes.OrderRoutes(r)
+
+	port := controllers.GetPort()
+
+	r.Run(":" + port)
 }

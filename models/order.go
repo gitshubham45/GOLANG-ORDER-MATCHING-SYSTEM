@@ -7,6 +7,6 @@ type Order struct {
 	Type 				string 		`json:"type"` // limit/ market
 	Price 				float64 	`json:"price,omitempty"`
 	InitialQuantity 	float64		`json:"initialQuantity"`
-	RemainigQuantity 	float64 	`json:"remainigQuantity"`
-	Status 				float64 	`json:"satus"` // open/filled/canceled
+	RemainingQuantity 	float64 	`json:"remainigQuantity"`
+	Status 				string 		`json:"status"` // open/filled/canceled
 }
