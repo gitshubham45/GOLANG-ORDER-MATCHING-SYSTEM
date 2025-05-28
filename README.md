@@ -6,16 +6,16 @@ This system allows clients to place buy/sell orders via a REST API, matches inco
 
 ---
 
-## 📦 Features
+##  Features
 
-- ✅ RESTful API to place, cancel, and query orders  
-- ✅ Order types: `limit`, `market`  
-- ✅ Matching Engine with price-time priority (FIFO at same price)  
-- ✅ Order book maintained in-memory  
-- ✅ Trade history recorded on match  
-- ✅ Data stored in MySQL (Dockerized for easy setup)  
-- ✅ Configurable via `.env` file  
-- ✅ REST APIs:
+-  RESTful API to place, cancel, and query orders  
+-  Order types: `limit`, `market`  
+-  Matching Engine with price-time priority (FIFO at same price)  
+-  Order book maintained in-memory  
+-  Trade history recorded on match  
+-  Data stored in MySQL (Dockerized for easy setup)  
+-  Configurable via `.env` file  
+-  REST APIs:
   - `POST /api/orders` – Place order  
   - `DELETE /api/orders/{id}` – Cancel open order  
   - `GET /api/orderbook?symbol={symbol}` – View order book  
@@ -27,7 +27,7 @@ This system allows clients to place buy/sell orders via a REST API, matches inco
 
 ---
 
-## 🔧 Dependencies
+##  Dependencies
 
 ### Local Machine Setup
 
@@ -37,7 +37,7 @@ This system allows clients to place buy/sell orders via a REST API, matches inco
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### 1. Clone the Repository
 
@@ -108,4 +108,22 @@ curl -X POST http://localhost:8080/api/orders \
 
 ```bash 
     curl "http://localhost:8080/api/orderbook?symbol=AAPL"
+```
+
+### 5. Cancel the existing order
+
+```bash
+  curl --location --request DELETE 'http://localhost:8080/api/orders/{orderId}'
+```
+
+### 6. Get List of  all orders
+
+```bash
+  curl --location 'http://localhost:8080/api/orders'
+```
+
+### 7. Get status of an order
+
+```bash
+  curl --location 'http://localhost:8080/api/orders/{orderId}'
 ```
