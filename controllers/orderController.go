@@ -24,7 +24,7 @@ func getenvDefault(key, defaultValue string) string {
 }
 
 func GetPort() string {
-	return getenvDefault("PORT", "8080")
+	return getenvDefault("APP_PORT", "8080")
 }
 
 func GetOrders(c *gin.Context) {

@@ -4,7 +4,7 @@ type Trade struct {
 	BuyOrderId 		string		`json:"buyOrderId"`
 	SellOrderId		string		`json:"sellOrderId"`
 	Symbol 			string  	`json:"symbol"`
-	Price 			string 		`json:"price"`
+	Price 			float64 	`json:"price,omitempty"`
 	Quantity 		string 		`json:"quantity"`
-	MatchedAt		string 		`json:"matchedAt"`
+	MatchedAt		string 		`json:"matched_at"`
 }
