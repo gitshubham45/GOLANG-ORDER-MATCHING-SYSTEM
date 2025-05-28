@@ -6,5 +6,5 @@ type Trade struct {
 	Symbol 			string  	`json:"symbol"`
 	Price 			float64 	`json:"price,omitempty"`
 	Quantity 		string 		`json:"quantity"`
-	MatchedAt		string 		`json:"matched_at"`
+	MatchedAt		string 		`json:"matchedAt"`
 }

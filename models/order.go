@@ -9,6 +9,6 @@ type Order struct {
 	InitialQuantity 	float64		`json:"initialQuantity"`
 	RemainingQuantity 	float64 	`json:"remainigQuantity"`
 	Status 				string 		`json:"status"` // open/filled/canceled
-	CreatedAt 			string		`json:"created_at,omitempty"`
-	UpdatedAt 			string 		`json:"updated_at,omitempty"`
+	CreatedAt 			string		`json:"createdAt,omitempty"`
+	UpdatedAt 			string 		`json:"updatedAt,omitempty"`
 }
