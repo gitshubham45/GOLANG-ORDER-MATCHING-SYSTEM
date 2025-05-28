@@ -42,7 +42,7 @@ This system allows clients to place buy/sell orders via a REST API, matches inco
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/GOLANG-ORDER-MATCHING-SYSTEM.git 
+git clone https://github.com/gitshubham45/GOLANG-ORDER-MATCHING-SYSTEM.git 
 cd GOLANG-ORDER-MATCHING-SYSTEM
 ```
 
@@ -60,7 +60,7 @@ cd GOLANG-ORDER-MATCHING-SYSTEM
 ```
 
 
-🧪 Test the API
+ Test the API
 
 ### 1. Place an Order( Buy order with limit)
 
